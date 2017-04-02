@@ -1,0 +1,5 @@
+rootProject.name = 'rxvaluestore'
+
+include 'library'
+include 'android'
+

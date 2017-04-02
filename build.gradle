@@ -1,0 +1,37 @@
+buildscript {
+    repositories {
+        maven { url "https://jitpack.io" }
+        maven { url "https://plugins.gradle.org/m2" }
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+//        classpath 'com.android.tools.build:gradle:2.2.3'
+        // the latest version of the android-apt plugin
+//        classpath "net.ltgt.gradle:gradle-apt-plugin:0.9"
+        classpath "com.github.tbroyer:gradle-apt-plugin:v0.9"
+        
+//        classpath "net.sf.gapt:apt:1"
+    }
+}
+
+subprojects {
+    group = GROUP
+    version = VERSION_NAME
+
+    buildscript {
+        dependencies {
+
+        }
+    }
+
+    apply plugin: 'maven-publish'
+
+    repositories {
+        maven { url "https://jitpack.io" }
+        mavenCentral()
+    }
+
+
+
+}
