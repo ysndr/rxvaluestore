@@ -5,7 +5,6 @@ import org.javatuples.*;
 import rx.Observable;
 import rx.Single;
 
-import com.google.common.base.Optional;
 
 /**
  * Created by yannik on 2/22/17.
@@ -17,7 +16,7 @@ public abstract class Store <S, T> {
     abstract S store();
 
     @Value.Parameter
-    abstract Optional<T> initial();
+    abstract T initial();
 
     abstract Observable<T> observable();
 

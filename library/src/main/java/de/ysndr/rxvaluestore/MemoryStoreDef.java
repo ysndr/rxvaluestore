@@ -1,7 +1,6 @@
 package de.ysndr.rxvaluestore;
 
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
+
 import org.immutables.value.Value;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
@@ -17,31 +16,33 @@ abstract class MemoryStoreDef<T> extends Store<BehaviorSubject<T>, T> {
     @Value.Lazy
     @Value.Parameter(false)
     public BehaviorSubject<T> store() {
-        return BehaviorSubject.create(initial().get());
+        return BehaviorSubject.create(initial());
     }
 
     @Override
-    abstract Optional<T> initial();
+    abstract T initial();
 
     @Override
     public Observable<T> observable() {
         return store().asObservable().share();
     }
 
-    @Value.Check
+  /*  @Value.Check
     protected void check() {
-        Preconditions.checkState(initial().isPresent(),
-                "'initial' should be defined to apply the store");
-    }
+       if (!initial().isPresent()) {
+           throw "'initial' should be defined to apply the store";
+       }
+
+    }*/
 
     @Override
     public <O> Observable.Transformer<O, T> apply() {
         // set default value to store
         // check would have failed if initial was not present
-        if (!store().hasValue() && initial().isPresent()) store().onNext(initial().get());
+        if (!store().hasValue()) store().onNext(initial());
 
         return source -> source
-                .flatMap(__ -> store().share().first());
+                .flatMap(__ -> Observable.just(store().getValue()));
 //                .compose(update()); // readd that element back to the store for caching
     }
 

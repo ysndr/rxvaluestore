@@ -1,11 +1,13 @@
-
+plugins {
+    id "me.tatarka.retrolambda" version "3.2.5"
+}
 apply plugin: 'java'
 apply plugin: "net.ltgt.apt"
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.google.guava:guava:21.0'
+//    compile 'com.google.guava:guava:20.0'
     compile 'com.github.pakoito:RxTuples:1.0.0'
     // rxjava
     compile 'io.reactivex:rxjava:1.2.6'
@@ -84,6 +86,7 @@ artifacts {
     archives javadocJar
     archives sourcesJar
 }
+
 
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
