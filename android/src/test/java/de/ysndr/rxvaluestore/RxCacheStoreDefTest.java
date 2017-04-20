@@ -55,6 +55,9 @@ public class RxCacheStoreDefTest {
         RxJavaTestPlugins.resetJavaTestPlugins();
     }
 
+
+
+
     // @Test => JUnit 4 annotation specifying this is a test to be run
     // The test simply checks that our TextView exists and has the text "Hello world!
     @Test
@@ -142,6 +145,30 @@ public class RxCacheStoreDefTest {
         subscriber.assertValues("Hello", "World", "!");
         subscriber.assertValueCount(3);
     }
+
+    @Test
+    public void useWithNewKey() {
+
+        RxCacheStore<String, MockPolicy> storeCpy = store.withKey("anotherkey");
+        Observable<String> value$ = storeCpy.observable();
+        value$.subscribe(subscriber);
+
+        Observable.<String>never()
+                .startWith("World")
+                .compose(storeCpy.update())
+                .map(value -> "!")
+                .compose(storeCpy.update())
+                .subscribe();
+
+        subscriber.assertNoErrors();
+//        subscriber.assertNotCompleted();
+        subscriber.assertValues("World", "!");
+        subscriber.assertValueCount(2);
+    }
+
+
+
+
 
 
 }

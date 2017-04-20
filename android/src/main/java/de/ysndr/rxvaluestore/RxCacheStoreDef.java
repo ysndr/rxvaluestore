@@ -31,9 +31,9 @@ abstract class RxCacheStoreDef<T, P> extends Store<RxObservableDiskCache<T, P>, 
     }
 
     @Override
-    @Value.Lazy
-    Observable<T> observable() {
+    public Observable<T> observable() {
         return proxy().asObservable().share();
+
     }
 
     @Override
@@ -44,23 +44,18 @@ abstract class RxCacheStoreDef<T, P> extends Store<RxObservableDiskCache<T, P>, 
                         .first()
                         .onErrorResumeNext(error ->
                                 (error instanceof NoSuchElementException && initial().isPresent())
-                                        ? Observable.just(initial().get())
-                                        : Observable.error(error)));
+                                        ? Observable.<T>just(initial().get())
+                                        : Observable.<T>error(error)));
     }
 
     @Override
     public Observable.Transformer<T, T> update() {
-        BehaviorSubject<T> proxyRef = proxy();
-
         return source -> source
-                .doOnNext(System.out::println)
                 .flatMap(value -> store()
                         .transform(Single.just(value), key())
                         .last() // first is old value
                         .map(cached -> cached.value)
-                        .doOnNext(System.out::println)
                 )
-                .doOnNext(__ -> System.out.println("updated: " + __))
                 .doOnNext(proxy()::onNext);
     }
 }
